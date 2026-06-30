@@ -11,6 +11,8 @@ private:
     
     bool lFlip = false;
     bool rFlip = false;
+    bool lastLFlip = false;
+    bool lastRFlip = false;
 
 public:
     const char* getName() override { return "Pinball"; }
@@ -26,6 +28,8 @@ public:
 
     void update() override {
         if (state == 600) {
+            lastLFlip = lFlip;
+            lastRFlip = rFlip;
             lFlip = (digitalRead(btnLeft) == LOW);
             rFlip = (digitalRead(btnRight) == LOW);
 
@@ -81,30 +85,52 @@ public:
 
             // Left Flipper Zone (X: 45 to 64)
             if (bX >= 45 && bX <= 64) {
-                float fY = lFlip ? 52 : 62; // approximate surface height
-                if (bY >= fY - 2 && bY <= fY + 4) {
-                    if (lFlip) { // hit while flipped up
-                        bVY = -3.5;
-                        bVX = (bX - 45) * 0.15; // angled shot
-                    } else { // rolling down
-                        bY = fY - 2;
-                        bVY = -bVY * 0.3;
-                        bVX += 0.1; 
+                if (lFlip && !lastLFlip) {
+                    // Sweeping UP
+                    if (bY >= 50 && bY <= 64) {
+                        bY = 50;
+                        bVY = -5.0; // powerful hit
+                        bVX = (bX - 45) * 0.2;
+                    }
+                } else if (lFlip && lastLFlip) {
+                    // Holding UP
+                    if (bY >= 50 && bY <= 54) {
+                        bY = 50;
+                        bVY = -bVY * 0.2; // soft bounce
+                        bVX += 0.05; // rolls right towards center
+                    }
+                } else {
+                    // Flipper DOWN
+                    if (bY >= 60 && bY <= 64) {
+                        bY = 60;
+                        bVY = -bVY * 0.2;
+                        bVX += 0.1; // rolls right towards gap
                     }
                 }
             }
             
             // Right Flipper Zone (X: 64 to 83)
             if (bX > 64 && bX <= 83) {
-                float fY = rFlip ? 52 : 62;
-                if (bY >= fY - 2 && bY <= fY + 4) {
-                    if (rFlip) {
-                        bVY = -3.5;
-                        bVX = (bX - 83) * 0.15; // negative angle shot
-                    } else {
-                        bY = fY - 2;
-                        bVY = -bVY * 0.3;
-                        bVX -= 0.1;
+                if (rFlip && !lastRFlip) {
+                    // Sweeping UP
+                    if (bY >= 50 && bY <= 64) {
+                        bY = 50;
+                        bVY = -5.0;
+                        bVX = (bX - 83) * 0.2; // angled towards center
+                    }
+                } else if (rFlip && lastRFlip) {
+                    // Holding UP
+                    if (bY >= 50 && bY <= 54) {
+                        bY = 50;
+                        bVY = -bVY * 0.2;
+                        bVX -= 0.05; // rolls left towards center
+                    }
+                } else {
+                    // Flipper DOWN
+                    if (bY >= 60 && bY <= 64) {
+                        bY = 60;
+                        bVY = -bVY * 0.2;
+                        bVX -= 0.1; // rolls left towards gap
                     }
                 }
             }

@@ -8,6 +8,7 @@ private:
     unsigned long reactStart = 0;
     unsigned long reactionTime = 0;
     bool lastSelect = true;
+    bool timerStarted = false;
 
 public:
     const char* getName() override { return "Reaction Time"; }
@@ -41,7 +42,7 @@ public:
                 delay(500);
             } else if (millis() - waitStart > waitDuration) {
                 state = 302;
-                reactStart = millis();
+                timerStarted = false;
             }
         }
         else if (state == 302) {
@@ -51,10 +52,17 @@ public:
             display.setCursor(30, 25); display.print("PRESS NOW!!!");
             display.setTextColor(WHITE);
             
+            // Draw first, then start the timer on the very frame it becomes visible!
+            if (!timerStarted) {
+                display.display(); // Force display right now
+                reactStart = millis();
+                timerStarted = true;
+            }
+            
             if (pressed) {
                 reactionTime = millis() - reactStart;
                 state = 303;
-                delay(500);
+                // No delay here, so the screen transitions to result immediately!
             }
         }
         else if (state == 303) {

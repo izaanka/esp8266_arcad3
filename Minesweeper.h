@@ -6,7 +6,8 @@ private:
     int msCursor = 0;
     bool msGameOver = false;
     int msRevealedCount = 0;
-    int state = 50;
+    int state = 49;
+    int difficulty = 1; // 0=Easy, 1=Medium, 2=Hard
 
     void revealTile(int x, int y) {
       if (x < 0 || x >= 8 || y < 0 || y >= 4) return;
@@ -39,15 +40,20 @@ public:
         msGameOver = false;
         msRevealedCount = 0;
         msCursor = 0;
-        
+        state = 49;
+        difficulty = 1;
+    }
+
+    void generateBoard() {
         for (int y = 0; y < 4; y++) {
           for (int x = 0; x < 8; x++) {
             msGrid[y][x] = 0;
           }
         }
         
+        int mineCount = (difficulty == 0) ? 4 : (difficulty == 1) ? 6 : 9;
         int placed = 0;
-        while (placed < 6) {
+        while (placed < mineCount) {
           int rx = random(8);
           int ry = random(4);
           if (!(msGrid[ry][rx] & 0x01)) {
@@ -72,11 +78,32 @@ public:
             msGrid[y][x] |= (count << 4);
           }
         }
-        state = 50;
     }
 
     void update() override {
-        if (state == 50) {
+        if (state == 49) {
+            display.clearDisplay();
+            display.setCursor(25, 10); display.print("SELECT LEVEL");
+            
+            if (digitalRead(btnLeft) == LOW) { difficulty = (difficulty > 0) ? difficulty - 1 : 2; delay(150); }
+            if (digitalRead(btnRight) == LOW) { difficulty = (difficulty < 2) ? difficulty + 1 : 0; delay(150); }
+            
+            display.setCursor(45, 30);
+            if (difficulty == 0) display.print("EASY");
+            else if (difficulty == 1) display.print("MEDIUM");
+            else display.print("HARD");
+            
+            display.setCursor(20, 50); display.print("D6: Start");
+            
+            if (digitalRead(btnSelect) == LOW) {
+                generateBoard();
+                state = 50;
+                delay(200);
+            }
+            display.display();
+            delay(15);
+        }
+        else if (state == 50) {
             if (digitalRead(btnLeft) == LOW) { msCursor = (msCursor > 0) ? msCursor - 1 : 31; delay(120); }
             if (digitalRead(btnRight) == LOW) { msCursor = (msCursor < 31) ? msCursor + 1 : 0; delay(120); }
             

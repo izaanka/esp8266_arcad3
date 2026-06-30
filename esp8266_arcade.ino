@@ -19,7 +19,7 @@ public:
     virtual void update() = 0;
 };
 
-#define MAX_GAMES 15
+#define MAX_GAMES 20
 ArcadeGame* gamesRegistry[MAX_GAMES];
 int registeredGamesCount = 0;
 
@@ -58,6 +58,8 @@ void returnToMenu();
 #include "Stacker.h"
 #include "GeometryDash.h"
 #include "Pinball.h"
+#include "Snake.h"
+#include "DoodleJump.h"
 
 
 // --- Main Program ---
