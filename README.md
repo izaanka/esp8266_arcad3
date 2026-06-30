@@ -12,6 +12,12 @@ This project features a dynamic, object-oriented architecture where games are se
 - **Minesweeper**: The classic PC game, complete with flagging functionality.
 - **Space Shooter**: Defend Earth from descending aliens!
 - **Tic-Tac-Toe**: Play against a friend or a Minimax-powered AI.
+- **Tetris**: The timeless block-stacking puzzle game.
+- **Flappy Bird**: A miniaturized physics-based runner where you navigate between pipes.
+- **Pacman**: A custom 16x8 wrap-around maze where you eat dots and avoid a smart ghost.
+- **Reaction Time**: Test your reflexes! Press the button as quickly as you can when the screen flashes.
+- **Stacker**: Stack the moving blocks to the top of the screen to win the major prize!
+- **Geometry Dash**: An intense rhythm-style runner where you jump over clusters of triangular spikes.
 
 ---
 

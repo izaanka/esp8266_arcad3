@@ -56,6 +56,7 @@ void returnToMenu();
 #include "Pacman.h"
 #include "ReactionTime.h"
 #include "Stacker.h"
+#include "GeometryDash.h"
 
 
 // --- Main Program ---
