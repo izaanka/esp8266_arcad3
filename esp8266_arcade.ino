@@ -96,16 +96,19 @@ void loop() {
   // ==========================================
   if (masterState == 0) {
     if (digitalRead(btnLeft) == LOW) { 
-        masterMenuOption = (masterMenuOption > 0) ? masterMenuOption - 1 : registeredGamesCount - 1; 
+        masterMenuOption = (masterMenuOption > 0) ? masterMenuOption - 1 : registeredGamesCount; 
         delay(150); 
     }
     if (digitalRead(btnRight) == LOW) { 
-        masterMenuOption = (masterMenuOption < registeredGamesCount - 1) ? masterMenuOption + 1 : 0; 
+        masterMenuOption = (masterMenuOption < registeredGamesCount) ? masterMenuOption + 1 : 0; 
         delay(150); 
     }
     if (digitalRead(btnSelect) == LOW) {
         delay(200);
-        if (registeredGamesCount > 0) {
+        if (masterMenuOption == registeredGamesCount) {
+            masterState = 2; // Settings
+        }
+        else if (registeredGamesCount > 0) {
             currentGame = gamesRegistry[masterMenuOption];
             currentGame->init();
             masterState = 1;
@@ -122,10 +125,15 @@ void loop() {
     
     for (int i = 0; i < 4; i++) {
       int idx = startItem + i;
-      if (idx >= registeredGamesCount) break;
+      if (idx > registeredGamesCount) break;
       display.setCursor(10, 15 + (i * 12));
       if (masterMenuOption == idx) display.print("> ");
-      display.print(gamesRegistry[idx]->getName());
+      
+      if (idx < registeredGamesCount) {
+        display.print(gamesRegistry[idx]->getName());
+      } else {
+        display.print("Settings");
+      }
     }
     
     display.display();
@@ -138,5 +146,41 @@ void loop() {
       if (currentGame != nullptr) {
           currentGame->update();
       }
+  }
+
+  // ==========================================
+  // SETTINGS STATE
+  // ==========================================
+  else if (masterState == 2) {
+      if (digitalRead(btnSelect) == LOW || digitalRead(btnLeft) == LOW || digitalRead(btnRight) == LOW) {
+          delay(200);
+          returnToMenu();
+      }
+
+      display.clearDisplay();
+      display.setTextSize(1);
+      display.setTextColor(WHITE);
+      
+      display.setCursor(40, 0); 
+      display.print("SETTINGS");
+      
+      display.setCursor(0, 15);
+      display.print("Games Inst: "); 
+      display.print(registeredGamesCount);
+      
+      uint32_t sketchSize = ESP.getSketchSize();
+      uint32_t totalSpace = ESP.getFlashChipRealSize();
+      
+      display.setCursor(0, 27);
+      display.print("Storage: ");
+      display.print(sketchSize / 1024); display.print("/");
+      display.print(totalSpace / 1024); display.print(" KB");
+      
+      display.setCursor(0, 43);
+      display.print("creator :");
+      display.setCursor(0, 53);
+      display.print("github.com/izaanka");
+      
+      display.display();
   }
 }
