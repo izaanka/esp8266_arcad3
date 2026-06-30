@@ -51,7 +51,7 @@ void returnToMenu();
 #include "Minesweeper.h"
 #include "SpaceShooter.h"
 #include "TicTacToe.h"
-
+#include "Tetris.h"
 
 // --- Main Program ---
 int masterState = 0; // 0: Master Menu, 1: Playing Game
