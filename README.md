@@ -12,6 +12,7 @@ This project features a dynamic, object-oriented architecture where games are se
 - **Minesweeper**: The classic PC game, complete with flagging functionality.
 - **Space Shooter**: Defend Earth from descending aliens!
 - **Tic-Tac-Toe**: Play against a friend or a Minimax-powered AI.
+- **Tetris**: An old classic.
 
 ---
 
