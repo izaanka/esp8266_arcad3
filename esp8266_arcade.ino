@@ -19,7 +19,7 @@ public:
     virtual void update() = 0;
 };
 
-#define MAX_GAMES 20
+#define MAX_GAMES 60
 ArcadeGame* gamesRegistry[MAX_GAMES];
 int registeredGamesCount = 0;
 
@@ -60,6 +60,40 @@ void returnToMenu();
 #include "Pinball.h"
 #include "Snake.h"
 #include "DoodleJump.h"
+#include "Asteroids.h"
+#include "Frogger.h"
+#include "Pong.h"
+#include "LunarLander.h"
+#include "Racing.h"
+#include "WhackAMole.h"
+#include "Catch.h"
+#include "MissileCommand.h"
+#include "Memory.h"
+#include "Hangman.h"
+#include "Artillery.h"
+#include "Rhythm.h"
+#include "FallDown.h"
+#include "Tron.h"
+#include "Submarine.h"
+#include "MathQuiz.h"
+#include "Mastermind.h"
+#include "Game2048.h"
+#include "Sokoban.h"
+#include "Connect4.h"
+#include "Blackjack.h"
+#include "Slots.h"
+#include "Bowling.h"
+#include "TRex.h"
+#include "Helicopter.h"
+#include "Invaders.h"
+#include "DuckHunt.h"
+#include "Parachute.h"
+#include "RiverRaid.h"
+#include "Rover.h"
+#include "Skiing.h"
+#include "BopIt.h"
+#include "Timber.h"
+#include "Maze.h"
 
 
 // --- Main Program ---
