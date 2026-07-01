@@ -19,6 +19,7 @@ public:
     virtual void init() = 0;
     virtual void update() = 0;
     virtual int getScore() { return 0; }
+    virtual const char* getCategory() { return "Other Games"; }
 };
 
 #define MAX_GAMES 100
@@ -147,24 +148,42 @@ void returnToMenu();
 #include "BungeeJump.h"
 #include "WordScramble.h"
 // --- Main Program ---
-int masterState = 0; // 0: Master Menu, 1: Playing Game, 2: Settings, 3: Highscores
+int masterState = 0; // 0: Master Menu, 1: Playing Game, 2: Settings, 3: Highscores, 4: Category Menu
 int masterMenuOption = 0;
 ArcadeGame* currentGame = nullptr;
 
 bool enableHighScores = false;
 int highscores[MAX_GAMES] = {0};
 
+const char* categories[] = {
+    "Arcade",
+    "Puzzle",
+    "Action",
+    "Sports",
+    "Other Games"
+};
+const int NUM_CATEGORIES = 5;
+
+int currentCategoryGames[MAX_GAMES];
+int numCategoryGames = 0;
+int currentGameIndex = -1;
+
 void returnToMenu() {
-    if (enableHighScores && currentGame != nullptr) {
-        int s = currentGame->getScore();
-        if (s > highscores[masterMenuOption]) {
-            highscores[masterMenuOption] = s;
-            EEPROM.put(1 + masterMenuOption * sizeof(int), s);
-            EEPROM.commit();
+    if (masterState == 1) { // Playing a game
+        if (enableHighScores && currentGame != nullptr && currentGameIndex != -1) {
+            int s = currentGame->getScore();
+            if (s > highscores[currentGameIndex]) {
+                highscores[currentGameIndex] = s;
+                EEPROM.put(1 + currentGameIndex * sizeof(int), s);
+                EEPROM.commit();
+            }
         }
+        masterState = 4; // Go back to sub-menu
+    } else {
+        masterState = 0; // Go back to root menu
     }
-    masterState = 0;
     currentGame = nullptr;
+    currentGameIndex = -1;
 }
 
 void setup() {
@@ -210,15 +229,16 @@ void loop() {
   // MASTER MENU STATE
   // ==========================================
   if (masterState == 0) {
-    int hsIdx = registeredGamesCount;
-    int setIdx = registeredGamesCount + 1;
+    int totalItems = NUM_CATEGORIES + 2;
+    int hsIdx = NUM_CATEGORIES;
+    int setIdx = NUM_CATEGORIES + 1;
 
     if (digitalRead(btnLeft) == LOW) { 
-        masterMenuOption = (masterMenuOption > 0) ? masterMenuOption - 1 : setIdx; 
+        masterMenuOption = (masterMenuOption > 0) ? masterMenuOption - 1 : totalItems - 1; 
         delay(150); 
     }
     if (digitalRead(btnRight) == LOW) { 
-        masterMenuOption = (masterMenuOption < setIdx) ? masterMenuOption + 1 : 0; 
+        masterMenuOption = (masterMenuOption < totalItems - 1) ? masterMenuOption + 1 : 0; 
         delay(150); 
     }
     if (digitalRead(btnSelect) == LOW) {
@@ -227,10 +247,39 @@ void loop() {
             masterState = 2; // Settings
         } else if (masterMenuOption == hsIdx) {
             masterState = 3; // Highscores
-        } else if (registeredGamesCount > 0) {
-            currentGame = gamesRegistry[masterMenuOption];
-            currentGame->init();
-            masterState = 1;
+            // Populate and sort all games for Highscores!
+            numCategoryGames = registeredGamesCount;
+            for(int i=0; i<registeredGamesCount; i++) currentCategoryGames[i] = i;
+            for(int i=0; i<numCategoryGames-1; i++) {
+                for(int j=i+1; j<numCategoryGames; j++) {
+                    if (strcmp(gamesRegistry[currentCategoryGames[i]]->getName(), gamesRegistry[currentCategoryGames[j]]->getName()) > 0) {
+                        int t = currentCategoryGames[i];
+                        currentCategoryGames[i] = currentCategoryGames[j];
+                        currentCategoryGames[j] = t;
+                    }
+                }
+            }
+        } else {
+            // Load Sub-menu
+            masterState = 4;
+            const char* selCat = categories[masterMenuOption];
+            numCategoryGames = 0;
+            for(int i=0; i<registeredGamesCount; i++) {
+                if (strcmp(gamesRegistry[i]->getCategory(), selCat) == 0) {
+                    currentCategoryGames[numCategoryGames++] = i;
+                }
+            }
+            // Sort
+            for(int i=0; i<numCategoryGames-1; i++) {
+                for(int j=i+1; j<numCategoryGames; j++) {
+                    if (strcmp(gamesRegistry[currentCategoryGames[i]]->getName(), gamesRegistry[currentCategoryGames[j]]->getName()) > 0) {
+                        int t = currentCategoryGames[i];
+                        currentCategoryGames[i] = currentCategoryGames[j];
+                        currentCategoryGames[j] = t;
+                    }
+                }
+            }
+            masterMenuOption = 0; // reset cursor for sub-menu
         }
     }
 
@@ -239,22 +288,61 @@ void loop() {
     display.setTextColor(WHITE);
     display.setCursor(20, 0); display.print("- ARCADE MENU -");
     
-    // Dynamic Scrolling Menu logic
     int startItem = masterMenuOption >= 4 ? masterMenuOption - 3 : 0;
     
     for (int i = 0; i < 4; i++) {
       int idx = startItem + i;
-      if (idx > setIdx) break;
+      if (idx >= totalItems) break;
       display.setCursor(10, 15 + (i * 12));
       if (masterMenuOption == idx) display.print("> ");
       
-      if (idx < hsIdx) {
-        display.print(idx + 1); display.print(". "); display.print(gamesRegistry[idx]->getName());
+      if (idx < NUM_CATEGORIES) {
+        display.print("[ "); display.print(categories[idx]); display.print(" ]");
       } else if (idx == hsIdx) {
         display.print(idx + 1); display.print(". Highscores");
       } else {
         display.print(idx + 1); display.print(". Settings");
       }
+    }
+    
+    display.display();
+  }
+  // ==========================================
+  // CATEGORY SUB-MENU STATE
+  // ==========================================
+  else if (masterState == 4) {
+    if (digitalRead(btnLeft) == LOW) { 
+        masterMenuOption = (masterMenuOption > 0) ? masterMenuOption - 1 : numCategoryGames - 1; 
+        delay(150); 
+    }
+    if (digitalRead(btnRight) == LOW) { 
+        masterMenuOption = (masterMenuOption < numCategoryGames - 1) ? masterMenuOption + 1 : 0; 
+        delay(150); 
+    }
+    if (digitalRead(btnSelect) == LOW) {
+        delay(200);
+        if (numCategoryGames > 0) {
+            currentGameIndex = currentCategoryGames[masterMenuOption];
+            currentGame = gamesRegistry[currentGameIndex];
+            currentGame->init();
+            masterState = 1;
+        }
+    }
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setCursor(10, 0); display.print("- SELECT GAME -");
+    
+    int startItem = masterMenuOption >= 4 ? masterMenuOption - 3 : 0;
+    
+    for (int i = 0; i < 4; i++) {
+      int idx = startItem + i;
+      if (idx >= numCategoryGames) break;
+      display.setCursor(10, 15 + (i * 12));
+      if (masterMenuOption == idx) display.print("> ");
+      
+      int realIdx = currentCategoryGames[idx];
+      display.print(gamesRegistry[realIdx]->getName());
     }
     
     display.display();
@@ -322,10 +410,11 @@ void loop() {
           for(int i=0; i<4; i++) {
               int idx = start + i;
               if (idx >= registeredGamesCount) break;
+              int realIdx = currentCategoryGames[idx]; // Uses array sorted in masterState 0
               display.setCursor(0, 15 + (i*12));
-              display.print(gamesRegistry[idx]->getName());
+              display.print(gamesRegistry[realIdx]->getName());
               display.setCursor(100, 15 + (i*12));
-              display.print(highscores[idx]);
+              display.print(highscores[realIdx]);
           }
       }
       display.display();
