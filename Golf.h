@@ -17,6 +17,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Sports"; }
     const char* getName() override { return "Golf"; }
 
     void init() override { strokes = 0; loadHole(); }

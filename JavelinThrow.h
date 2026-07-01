@@ -10,6 +10,7 @@ private:
     float jx, jy, jvx, jvy;
 
 public:
+    const char* getCategory() override { return "Sports"; }
     const char* getName() override { return "Javelin Throw"; }
 
     void init() override {

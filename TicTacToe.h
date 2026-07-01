@@ -32,6 +32,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Puzzle"; }
     const char* getName() override { return "Tic-Tac-Toe"; }
 
     void init() override {

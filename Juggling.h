@@ -9,6 +9,7 @@ private:
     int state;
 
 public:
+    const char* getCategory() override { return "Sports"; }
     const char* getName() override { return "Juggling"; }
     int getScore() override { return score; }
 

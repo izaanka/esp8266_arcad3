@@ -9,6 +9,7 @@ private:
     int score;
 
 public:
+    const char* getCategory() override { return "Action"; }
     const char* getName() override { return "Bungee Jump"; }
     int getScore() override { return score; }
 

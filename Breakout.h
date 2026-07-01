@@ -9,6 +9,7 @@ private:
     int state = 20;
 
 public:
+    const char* getCategory() override { return "Arcade"; }
     const char* getName() override { return "Breakout"; }
 
     void init() override {

@@ -40,6 +40,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Puzzle"; }
     const char* getName() override { return "Connect 4"; }
 
     void init() override {

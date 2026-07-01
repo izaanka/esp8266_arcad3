@@ -9,6 +9,7 @@ private:
     int score;
 
 public:
+    const char* getCategory() override { return "Action"; }
     const char* getName() override { return "Space Dock"; }
     int getScore() override { return score; }
 

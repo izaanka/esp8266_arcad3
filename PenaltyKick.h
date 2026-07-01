@@ -9,6 +9,7 @@ private:
     float ballY;
 
 public:
+    const char* getCategory() override { return "Sports"; }
     const char* getName() override { return "Penalty Kick"; }
     int getScore() override { return score; }
 

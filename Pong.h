@@ -16,7 +16,8 @@ private:
     }
 
 public:
-    virtual int getScore() override { return score; }
+    const char* getCategory() override { return "Sports"; }
+    virtual int getScore() override { return p1Score; }
     const char* getName() override { return "Pong vs AI"; }
 
     void init() override {

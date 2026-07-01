@@ -11,7 +11,8 @@ private:
     int state = 30;
 
 public:
-    virtual int getScore() override { return score; }
+    const char* getCategory() override { return "Puzzle"; }
+    virtual int getScore() override { return gdScore; }
     const char* getName() override { return "Block Jump"; }
 
     void init() override {

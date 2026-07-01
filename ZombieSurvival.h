@@ -10,6 +10,7 @@ private:
     float spawnRate;
 
 public:
+    const char* getCategory() override { return "Action"; }
     const char* getName() override { return "Zombie Survive"; }
     int getScore() override { return score; }
 

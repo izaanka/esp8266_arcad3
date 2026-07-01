@@ -31,6 +31,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Puzzle"; }
     const char* getName() override { return "Lights Out"; }
     void init() override {
         loMenuOption = 0;

@@ -15,6 +15,7 @@ private:
     bool lastSelect = true;
 
 public:
+    const char* getCategory() override { return "Puzzle"; }
     const char* getName() override { return "Stacker"; }
 
     void init() override {

@@ -13,6 +13,7 @@ private:
     float speed;
 
 public:
+    const char* getCategory() override { return "Action"; }
     const char* getName() override { return "Barrel Jump"; }
     int getScore() override { return score; }
 

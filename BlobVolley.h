@@ -21,6 +21,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Sports"; }
     const char* getName() override { return "Blob Volley"; }
     int getScore() override { return pScore; }
 

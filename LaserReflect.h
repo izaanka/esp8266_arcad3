@@ -15,6 +15,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Action"; }
     virtual int getScore() override { return score; }
     const char* getName() override { return "Laser Reflect"; }
 
@@ -45,7 +46,7 @@ public:
                 if (grid[x][y] == 3) display.fillRect(px, py, 10, 8, WHITE);
                 if (grid[x][y] == 4) display.drawCircle(px+5, py+4, 4, WHITE);
                 if (grid[x][y] == 1) display.drawLine(px, py+8, px+10, py, WHITE); // /
-                if (grid[x][y] == 2) display.drawLine(px, py, px+10, py+8, WHITE); // \
+                if (grid[x][y] == 2) display.drawLine(px, py, px+10, py+8, WHITE); // Backslash
             }
         }
 

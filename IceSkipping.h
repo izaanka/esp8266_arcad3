@@ -9,6 +9,7 @@ private:
     bool graceWindow;
 
 public:
+    const char* getCategory() override { return "Sports"; }
     const char* getName() override { return "Ice Skipping"; }
 
     void init() override {

@@ -11,6 +11,7 @@ private:
     bool lastS;
 
 public:
+    const char* getCategory() override { return "Puzzle"; }
     const char* getName() override { return "Number Guess"; }
     int getScore() override { return score; }
 

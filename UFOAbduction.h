@@ -11,6 +11,7 @@ private:
     int state;
 
 public:
+    const char* getCategory() override { return "Action"; }
     const char* getName() override { return "UFO Abduct"; }
     int getScore() override { return score; }
 

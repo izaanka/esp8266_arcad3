@@ -18,6 +18,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Action"; }
     const char* getName() override { return "Burger Chef"; }
     int getScore() override { return score; }
 

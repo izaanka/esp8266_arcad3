@@ -85,6 +85,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Puzzle"; }
     virtual int getScore() override { return score; }
     const char* getName() override { return "Tetris"; }
 

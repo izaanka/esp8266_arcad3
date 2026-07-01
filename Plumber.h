@@ -65,6 +65,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Puzzle"; }
     const char* getName() override { return "Plumber"; }
     int getScore() override { return score; }
 

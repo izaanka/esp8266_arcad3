@@ -32,6 +32,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Arcade"; }
     virtual int getScore() override { return score; }
     const char* getName() override { return "River Raid"; }
 

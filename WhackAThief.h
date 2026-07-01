@@ -10,6 +10,7 @@ private:
     bool lastL, lastS, lastR;
 
 public:
+    const char* getCategory() override { return "Action"; }
     const char* getName() override { return "Whack Thief"; }
     int getScore() override { return score; }
 

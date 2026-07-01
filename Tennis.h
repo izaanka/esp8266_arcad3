@@ -8,6 +8,7 @@ private:
     bool lastS;
 
 public:
+    const char* getCategory() override { return "Sports"; }
     const char* getName() override { return "Tennis"; }
     int getScore() override { return score; }
 

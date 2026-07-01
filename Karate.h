@@ -9,6 +9,7 @@ private:
     bool lastL, lastS, lastR;
 
 public:
+    const char* getCategory() override { return "Action"; }
     const char* getName() override { return "Karate"; }
     int getScore() override { return aiHP == 0 ? 1 : 0; }
 

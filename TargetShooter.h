@@ -20,6 +20,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Action"; }
     const char* getName() override { return "Target Shoot"; }
     int getScore() override { return score; }
 

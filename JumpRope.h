@@ -11,6 +11,7 @@ private:
     bool lastSelect;
 
 public:
+    const char* getCategory() override { return "Action"; }
     virtual int getScore() override { return score; }
     const char* getName() override { return "Jump Rope"; }
 

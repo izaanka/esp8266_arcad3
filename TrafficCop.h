@@ -24,6 +24,7 @@ private:
     }
 
 public:
+    const char* getCategory() override { return "Action"; }
     const char* getName() override { return "Traffic Cop"; }
     int getScore() override { return score; }
 
