@@ -19,11 +19,11 @@ This project has reached its architectural limit of 100 distinct games. Highligh
 - **Sports**: Tennis, Bowling, Golf, Penalty Kick, Diving, Javelin Throw, Sumo
 
 ## Setup
-1. Wire up the SSD1306 OLED via I2C (SDA to D2/GPIO4, SCL to D1/GPIO5).
+1. Wire up the SSD1306 OLED via I2C (SDA to D1, SCL to D2).
 2. Wire up 3 tactile buttons to D5 (Left), D6 (Select), and D7 (Right). Connect the other legs to Ground.
 3. Open `esp8266_arcade.ino` in the Arduino IDE.
 4. Upload to your ESP8266.
 
 *Tip: Enable Highscores in the Settings menu before playing!*
 
-__readme.md was AI generated__
+*readme.md was AI generated, there might be mistakes, contact owner incase of any*
