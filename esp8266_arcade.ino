@@ -8,9 +8,9 @@
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 // ESP8266 Pins
-const int btnLeft = 14;   // D5
-const int btnSelect = 12; // D6
-const int btnRight = 13;  // D7
+const int btnLeft = 12;   //
+const int btnSelect = 13; //
+const int btnRight = 14;  //
 
 // --- Game Engine Base & Registry ---
 class ArcadeGame {
