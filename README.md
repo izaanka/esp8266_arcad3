@@ -5,9 +5,9 @@ Welcome to the ultimate custom arcade platform running on a single ESP8266!
 ## Features
 - **Massive Library**: Contains exactly **100 unique, hand-crafted games** spanning logic puzzles, physics simulations, racing, timing, and action!
 - **Auto-Registry Engine**: Modular `.h` architecture. Just drop a game file in the folder, `#include` it, and the engine automatically injects it into the main menu without modifying `setup()` or `loop()`.
-- **Categorized Folders**: 100 games are cleanly organized into 5 folders (`Arcade`, `Puzzle`, `Action`, `Sports`, `Other Games`) and sorted alphabetically for fast navigation.
+- **Unified Game Library**: All 100 games are conveniently accessible from a single unified list and sorted alphabetically for fast navigation.
 - **EEPROM Highscores**: Automatically tracks your top scores for every single game. Saves only when you beat a highscore to drastically reduce flash memory wear.
-- **Dynamic Menus**: Features a scrolling master list, a dedicated highscores screen, and an interactive settings toggler.
+- **Utility Apps & Menus**: Features a standalone Morse Translator utility app directly on the main menu, alongside a dedicated highscores screen and interactive settings.
 - **Hardware**: Uses an ESP8266, a 128x64 I2C OLED display (SSD1306), and just 3 tactile buttons (Left, Select, Right).
 
 ## The 100 Game Milestone
