@@ -147,6 +147,7 @@ void returnToMenu();
 #include "TrafficCop.h"
 #include "BungeeJump.h"
 #include "WordScramble.h"
+#include "MorseTranslator.h"
 // --- Main Program ---
 int masterState = 0; // 0: Master Menu, 1: Playing Game, 2: Settings, 3: Highscores, 4: Category Menu
 int masterMenuOption = 0;
@@ -156,13 +157,9 @@ bool enableHighScores = false;
 int highscores[MAX_GAMES] = {0};
 
 const char* categories[] = {
-    "Arcade",
-    "Puzzle",
-    "Action",
-    "Sports",
-    "Other Games"
+    "Games"
 };
-const int NUM_CATEGORIES = 5;
+const int NUM_CATEGORIES = 1;
 
 int currentCategoryGames[MAX_GAMES];
 int numCategoryGames = 0;
@@ -229,9 +226,11 @@ void loop() {
   // MASTER MENU STATE
   // ==========================================
   if (masterState == 0) {
-    int totalItems = NUM_CATEGORIES + 2;
-    int hsIdx = NUM_CATEGORIES;
-    int setIdx = NUM_CATEGORIES + 1;
+    int totalItems = NUM_CATEGORIES + 4;
+    int morseIdx = NUM_CATEGORIES;
+    int hsIdx = NUM_CATEGORIES + 1;
+    int setIdx = NUM_CATEGORIES + 2;
+    int credIdx = NUM_CATEGORIES + 3;
 
     if (digitalRead(btnLeft) == LOW) { 
         masterMenuOption = (masterMenuOption > 0) ? masterMenuOption - 1 : totalItems - 1; 
@@ -243,13 +242,19 @@ void loop() {
     }
     if (digitalRead(btnSelect) == LOW) {
         delay(200);
-        if (masterMenuOption == setIdx) {
+        if (masterMenuOption == credIdx) {
+            masterState = 5; // Credits
+        } else if (masterMenuOption == setIdx) {
             masterState = 2; // Settings
         } else if (masterMenuOption == hsIdx) {
             masterState = 3; // Highscores
             // Populate and sort all games for Highscores!
-            numCategoryGames = registeredGamesCount;
-            for(int i=0; i<registeredGamesCount; i++) currentCategoryGames[i] = i;
+            numCategoryGames = 0;
+            for(int i=0; i<registeredGamesCount; i++) {
+                if (strcmp(gamesRegistry[i]->getName(), "Morse Translator") != 0) {
+                    currentCategoryGames[numCategoryGames++] = i;
+                }
+            }
             for(int i=0; i<numCategoryGames-1; i++) {
                 for(int j=i+1; j<numCategoryGames; j++) {
                     if (strcmp(gamesRegistry[currentCategoryGames[i]]->getName(), gamesRegistry[currentCategoryGames[j]]->getName()) > 0) {
@@ -259,13 +264,22 @@ void loop() {
                     }
                 }
             }
+        } else if (masterMenuOption == morseIdx) {
+            for(int i=0; i<registeredGamesCount; i++) {
+                if (strcmp(gamesRegistry[i]->getName(), "Morse Translator") == 0) {
+                    currentGameIndex = i;
+                    currentGame = gamesRegistry[i];
+                    currentGame->init();
+                    masterState = 1;
+                    break;
+                }
+            }
         } else {
             // Load Sub-menu
             masterState = 4;
-            const char* selCat = categories[masterMenuOption];
             numCategoryGames = 0;
             for(int i=0; i<registeredGamesCount; i++) {
-                if (strcmp(gamesRegistry[i]->getCategory(), selCat) == 0) {
+                if (strcmp(gamesRegistry[i]->getName(), "Morse Translator") != 0) {
                     currentCategoryGames[numCategoryGames++] = i;
                 }
             }
@@ -298,10 +312,14 @@ void loop() {
       
       if (idx < NUM_CATEGORIES) {
         display.print("[ "); display.print(categories[idx]); display.print(" ]");
+      } else if (idx == morseIdx) {
+        display.print("[ Morse Translator ]");
       } else if (idx == hsIdx) {
-        display.print(idx + 1); display.print(". Highscores");
+        display.print("- Highscores");
+      } else if (idx == setIdx) {
+        display.print("- Settings");
       } else {
-        display.print(idx + 1); display.print(". Settings");
+        display.print("- Credits");
       }
     }
     
@@ -417,6 +435,24 @@ void loop() {
               display.print(highscores[realIdx]);
           }
       }
+      display.display();
+  }
+  // ==========================================
+  // CREDITS STATE
+  // ==========================================
+  else if (masterState == 5) {
+      if (digitalRead(btnSelect) == LOW || digitalRead(btnLeft) == LOW || digitalRead(btnRight) == LOW) { delay(200); returnToMenu(); }
+      
+      display.clearDisplay();
+      display.setTextSize(1);
+      display.setTextColor(WHITE);
+      display.setCursor(32, 0); display.print("- CREDITS -");
+      display.setCursor(0, 10); display.print("Licence: MIT Licence");
+      display.setCursor(0, 19); display.print("Developer: Izaan");
+      display.setCursor(0, 28); display.print("Kaskar");
+      display.setCursor(0, 37); display.print("Project Repositary:");
+      display.setCursor(0, 46); display.print("github.com/izaanka/");
+      display.setCursor(0, 55); display.print("esp8266_arcad3");
       display.display();
   }
 }
